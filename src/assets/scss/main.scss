@@ -1,0 +1,82 @@
+@import "_vant.scss";
+@import "_helper.scss";
+
+html,body {
+  scroll-behavior:smooth;
+}
+.navbar {
+  background-image: linear-gradient(90deg, #0af, #0085ff);
+  color: #fff;
+  .van-icon,
+  .van-nav-bar__title {
+    color: #fff;
+  }
+}
+
+.navbar[class*=van-hairline]::after {
+  content: unset;
+}
+
+.color {
+  &--white {
+    color: #fff;
+  }
+}
+
+.mx-1 {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.pr-2 {
+  padding-right: 10px;
+}
+
+.font-sm {
+  font-size: 14px;
+}
+.font-md {
+  font-size: 16px;
+}
+
+.full-fixed {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1000;
+  overflow: auto;
+  background-color: #f4f4f4;
+  -webkit-overflow-scrolling: touch;
+}
+
+
+
+.flex {
+  display: flex;
+  &-column {
+    display: flex;
+    flex-direction: column;
+  }
+  &-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &-item {
+    flex: 1;
+  }
+}
+
+.touch {
+  width: 100%;
+  height: 100%;
+  -webkit-overflow-scrolling: touch;
+  overflow: auto;
+}
+
+.wh {
+  width: 100%;
+  height: 100%;
+}
