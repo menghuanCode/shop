@@ -2,11 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import 'lib-flexible'
-import './assets/scss/main.scss'
+import 'amfe-flexible'
 
 import './publics/vant'
 import './publics/pinyin4js'
+import './publics/utils'
+import './assets/scss/main.scss'
 
 Vue.config.productionTip = false
 
