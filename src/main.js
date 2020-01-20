@@ -5,8 +5,8 @@ import store from './store'
 import 'amfe-flexible'
 
 import './publics/vant'
-import './publics/pinyin4js'
 import './publics/utils'
+import './publics/lodash'
 import './assets/scss/main.scss'
 
 Vue.config.productionTip = false

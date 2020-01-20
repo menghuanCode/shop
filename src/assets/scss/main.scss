@@ -78,8 +78,17 @@ html,body {
 }
 
 .touch {
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.icon {
+  width: 16px;
+  height: 16px;
+  vertical-align: -4px;
+  fill: currentColor;
+  overflow: hidden;
 }

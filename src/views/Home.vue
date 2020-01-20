@@ -1,23 +1,33 @@
 <template>
   <div class="home">
-    <CitySelect :data="city" />
+    <AddressSelector v-if="!isCitySelection" @select="getSelectCity" @back="isCitySelection = false"  />
+    <CitySelector :data="citys" v-else @select="getSelectCity" @back="isCitySelection = false"  />
   </div>
 </template>
 
 <script>
-import city from '../assets/json/citys.json'
-// @ is an alias to /src
-import CitySelect from '@/components/CitySelect'
+import citys from '../assets/json/citys.json'
+import CitySelector from '@/components/CitySelector.vue'
+import AddressSelector from '@/components/AddressSelector.vue'
 
 export default {
   name: 'home',
   data() {
     return {
-      city: Object.freeze(city)
+      citys: Object.freeze(citys),
+      city: '',
+      isCitySelection: true,
     }
   },
   components: {
-    CitySelect
+    CitySelector,
+    AddressSelector
+  },
+  methods: {
+    getSelectCity(city) {
+      this.city = city
+      this.isCitySelection = false
+    }
   }
 }
 </script>
