@@ -1,13 +1,19 @@
 <template>
   <div class="city-selector">
     <van-nav-bar left-arrow title="城市选择" @click-left="$emit('back')" class="navbar"></van-nav-bar>
-    <search placeholder="输入城市名或拼音" @input="onSearchCitys"  background="linear-gradient(90deg, #0af, #0085ff)" shape="round" />
+    <search
+      placeholder="输入城市名或拼音"
+      @input="onSearchCitys"
+      background="linear-gradient(90deg, #0af, #0085ff)"
+      shape="round"
+    />
     <div class="touch flex-item" @click="onSelectCity">
       <van-index-bar
         class="result-panel"
         :index-list="indexList"
         highlight-color="rgb(0, 136, 255)"
         v-if="!value && !searchlist.length"
+        :sticky="false"
       >
         <div :id="key" v-for="(list, key) in citys" :key="key">
           <van-index-anchor class="van-anchor" :index="key"/>
@@ -93,18 +99,18 @@ export default {
     }
   },
   mounted() {
-    this.onUpdateData()
+    this.onUpdateData();
     this.indexList = Object.keys(this.data);
     this.onSearchCitys = this._.debounce(
       value => {
         this.value = value;
         if (!value) {
-          this.onUpdateData()
-        } else {
-          setTimeout(() => {
-            this.citys = Object.freeze({ A: this.data["A"] });
-          });
+          setTimeout(this.onUpdateData);
+          return;
         }
+        setTimeout(() => {
+          this.citys = Object.freeze({ A: this.data["A"] });
+        });
       },
       20,
       {
@@ -117,14 +123,14 @@ export default {
     onSelectCity(e) {
       let cell = this.utils.getPathElement(e, "van-cell");
       // 如果不是选择城市
-      if (!cell) { return; }
-      this.$emit('select', cell.innerText)
+      if (!cell) {
+        return;
+      }
+      this.$emit("select", cell.innerText);
     },
     onSearchCitys() {},
     onUpdateData() {
-      setTimeout(() => {
-        this.citys = Object.freeze(Object.assign({}, this.data));
-      });
+      this.citys = Object.freeze(Object.assign({}, this.data));
     }
   }
 };
