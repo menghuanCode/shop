@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     onSelectCity(e) {
-      let cell = this.utils.getPathElement(e, "van-cell");
+      let cell = this.utils.queryPathSelector(e, "van-cell");
       // 如果不是选择城市
       if (!cell) {
         return;

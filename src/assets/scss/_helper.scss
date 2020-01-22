@@ -1,0 +1,64 @@
+$theme-sizes: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$theme-sizes: map-merge(
+  (
+    "xss":   0,
+    "xs":    1,
+    "sm":    2,
+    "md":    3,
+    "lg":    4,
+    "lger":  5,
+  ),
+  $theme-sizes
+);
+
+$theme-directions: () !default;
+// stylelint-disable-next-line scss/dollar-variable-default
+$theme-directions: map-merge(
+  (
+    "top":  t,
+    "right":  r,
+    "bottom": b,
+    "left":   l,
+  ),
+  $theme-directions
+);
+
+@each $size, $index in $theme-sizes {
+  .font-#{$size} {
+    font-size: 10px + $index * 2px;
+  }
+  .icon-#{$size} {
+    width: 10px + $index * 2px;
+    height: 10px + $index * 2px;
+    vertical-align: -$index * 1px;
+  }
+}
+
+@for $i from 0 to 5 {
+  @each $item, $abd in $theme-directions {
+    .m#{$abd}-#{$i} {
+      margin-#{$item}: $i * 5px;
+    }
+    .p#{$abd}-#{$i} {
+      padding-#{$item}: $i * 5px;
+    }
+  }
+  .mx-#{$i} {
+    margin-left: $i * 5px;;
+    margin-right: $i * 5px;;
+  }
+  .my-#{$i} {
+    margin-top: $i * 5px;;
+    margin-bottom: $i * 5px;;
+  }
+  .px-#{$i} {
+    padding-left: $i * 5px;;
+    padding-right: $i * 5px;;
+  }
+  .py-#{$i} {
+    padding-top: $i * 5px;;
+    padding-bottom: $i * 5px;;
+  }
+  
+}

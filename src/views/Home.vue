@@ -1,33 +1,248 @@
 <template>
   <div class="home">
-    <AddressSelector v-if="!isCitySelection" @select="getSelectCity" @back="isCitySelection = false"  />
-    <CitySelector :data="citys" v-else @select="getSelectCity" @back="isCitySelection = false"  />
+    <van-nav-bar
+      left-arrow
+      left-text="正在获取地址中..."
+      @click-left="isLocation = true"
+      class="navbar font-bold"
+    >
+      <div slot="left" class="font-md">
+        <van-icon name="location"/>
+        <span class="address">未能获取收货地址</span>
+        <van-icon name="arrow-down" size="12" class="ml-1"/>
+      </div>
+    </van-nav-bar>
+    <van-sticky>
+      <search class="foods-search" background="linear-gradient(90deg, #0af, #0085ff)">
+        <div class="foods-search__content">
+          <svg class="icon icon-sm pr-1" aria-hidden="true">
+            <use xlink:href="#iconsearch"></use>
+          </svg>
+          <span>搜索饿了么商家、商品名称</span>
+        </div>
+      </search>
+    </van-sticky>
+    <div class="footenter">
+      <van-grid class="menu" center clickable :column-num="5">
+        <van-grid-item v-for="(item, index) in menu" :key="index">
+          <div class="menu-item">
+            <van-image :src="item.pic" class="menu-pic"/>
+            <div class="menu-text">{{item.text}}</div>
+          </div>
+        </van-grid-item>
+      </van-grid>
+    </div>
+    <section class="section">
+      <banner
+        class="mb-1"
+        title="品质套餐"
+        desc="搭配齐全吃得好"
+        link="立即抢购 >"
+        :pic="require('../assets/images/foods03.png')"
+      />
+      <div class="vipbar">
+        <div class="vipbar-content">
+          <img src="../assets/images/icon01.jpeg" alt="" class="mr-1">
+          <span class="font-sm font-bold mr-1">超级会员</span>
+          <span class="font-xs">
+            <b class="dot"></b>每月领20元红包
+          </span>
+        </div>
+        <a href="javascript:;" class="vipbar-link">立即开通</a>
+      </div>
+    </section>
+    <div class="shoplist-title">推荐商家</div>
+    <div class="home-filter">
+      <FoodFilter/>
+    </div>
+    <AddressSelector v-if="isLocation" @select="getSelectCity" @back="isCitySelection = false"/>
+    <CitySelector
+      v-if="isCitySelection"
+      :data="citys"
+      @select="getSelectCity"
+      @back="isCitySelection = false"
+    />
   </div>
 </template>
 
 <script>
-import citys from '../assets/json/citys.json'
-import CitySelector from '@/components/CitySelector.vue'
-import AddressSelector from '@/components/AddressSelector.vue'
+import citys from "../assets/json/citys.json";
+import search from "@/components/pages/search.vue";
+import banner from "@/components/adversiting/banner.vue";
+import CitySelector from "@/components/CitySelector.vue";
+import AddressSelector from "@/components/AddressSelector.vue";
+import FoodFilter from "@/components/FoodsFilter.vue";
 
 export default {
-  name: 'home',
+  name: "home",
   data() {
     return {
       citys: Object.freeze(citys),
-      city: '',
-      isCitySelection: true,
-    }
+      city: "",
+      isLocation: false,
+      isCitySelection: false,
+      menu: [
+        {
+          pic: require("../assets/images/menu01.jpeg"),
+          text: "美食"
+        },
+        {
+          pic: require("../assets/images/menu02.jpeg"),
+          text: "晚餐"
+        },
+        {
+          pic: require("../assets/images/menu03.jpeg"),
+          text: "跑腿代购"
+        },
+        {
+          pic: require("../assets/images/menu04.jpeg"),
+          text: "汉堡披萨"
+        },
+        {
+          pic: require("../assets/images/menu05.jpeg"),
+          text: "速食简餐"
+        },
+        {
+          pic: require("../assets/images/menu06.jpeg"),
+          text: "地方小吃"
+        },
+        {
+          pic: require("../assets/images/menu07.jpeg"),
+          text: "大牌惠吃"
+        },
+        {
+          pic: require("../assets/images/menu08.jpeg"),
+          text: "速食简餐"
+        }
+      ]
+    };
   },
   components: {
     CitySelector,
-    AddressSelector
+    AddressSelector,
+    search,
+    banner,
+    FoodFilter
   },
   methods: {
     getSelectCity(city) {
-      this.city = city
-      this.isCitySelection = false
+      this.city = city;
+      this.isCitySelection = false;
+    }
+  }
+};
+</script>
+
+<style lang="scss" scoped>
+.menu {
+  font-size: 12px;
+  height: 160px;
+  &-item {
+    flex-basis: 20%;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    text-align: center;
+  }
+  &-pic {
+    width: 45px;
+  }
+}
+
+.footenter {
+  height: 172px;
+}
+
+.foods-search {
+  height: 56px;
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #fff;
+    color: #999;
+    font-size: 13px;
+    width: 91%;
+    height: 66%;
+  }
+}
+
+.section {
+  font-size: 0;
+  line-height: 0;
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+
+.vipbar {
+  height: 40px;
+  background-image: linear-gradient(90deg, #ffefc4, #f3dda0);
+  background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px 0 15px;
+  color: #644f1b;
+  &-content {
+    height: 18px;
+    display: flex;
+    align-items: center;
+  }
+  &-link {
+    display: flex;
+    align-items: center;
+    font-size: 10px;
+    position: relative;
+    height: 100%;
+    &:after {
+      content: "";
+      display: block;
+      border: 1px solid #8c632b;
+      border-width: 0px 1px 1px 0px;
+      transform: rotate(-45deg);
+      margin-left: 2px;
+      width: 4px;
+      height: 4px;
     }
   }
 }
-</script>
+
+.dot {
+  &::after {
+    content: "\B7";
+    margin: 0 0.106667rem;
+    margin: 0 1.066667vw;
+    font-weight: 700;
+  }
+}
+
+.shoplist {
+  &-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    height: 36px;
+    color: #000;
+    &::before,
+    &::after {
+      display: block;
+      content: "";
+      width: 20px;
+      height: 1px;
+      background-color: #999;
+    }
+    &::before {
+      margin-right: 12px;
+    }
+    &::after {
+      margin-left: 12px;
+    }
+  }
+}
+
+.home-filter {
+  position: sticky;
+  top: 56px;
+  z-index: 100;
+}
+</style>

@@ -1,17 +1,19 @@
 <template>
   <div class="search" :style="{background}">
-    <svg class="icon search-icon" aria-hidden="true">
-      <use xlink:href="#iconsearch"></use>
-    </svg>
-    <input
-      type="text"
-      :placeholder="placeholder"
-      class="search-input"
-      :class="{ 'search--round': shape == 'round' }"
-      @compositionstart="isInputing = true"
-      @input="!isInputing && $emit('input', $event.target.value)"
-      @compositionend="onInputed"
-    >
+    <slot>
+      <svg class="icon search-icon" aria-hidden="true">
+        <use xlink:href="#iconsearch"></use>
+      </svg>
+      <input
+        type="text"
+        :placeholder="placeholder"
+        class="search-input"
+        :class="{ 'search--round': shape == 'round' }"
+        @compositionstart="isInputing = true"
+        @input="!isInputing && $emit('input', $event.target.value)"
+        @compositionend="onInputed"
+      >
+    </slot>
   </div>
 </template>
 
@@ -40,9 +42,12 @@ export default {
   position: relative;
   background-color: #fff;
   font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   &-icon {
     position: absolute;
-    top: 16px;
+    top: 17px;
     left: 36px;
     width: 13px;
     height: 13px;
@@ -51,7 +56,6 @@ export default {
     width: 300px;
     height: 28px;
     padding-left: 32px;
-    margin-top: 8px;
     border: none;
     font-size: 13px;
     background-color: #f7f8fa;

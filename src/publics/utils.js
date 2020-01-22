@@ -1,7 +1,7 @@
 import Vue from 'vue'
 
 const utils = {
-  getPathElement(event, className) {
+  queryPathSelector(event, className) {
     if(!event.path) {
       throw('该事件没有 path 属性')
     }
