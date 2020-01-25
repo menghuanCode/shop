@@ -1,4 +1,5 @@
 
+
 .van-index-bar {
   &__index {
     padding: 3px;
@@ -16,4 +17,9 @@
 
 .van-grid-item__content {
   padding: 0;
+}
+
+
+.van-cell-group__title {
+  color: #666;
 }

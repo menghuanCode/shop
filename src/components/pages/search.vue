@@ -1,7 +1,7 @@
 <template>
   <div class="search" :style="{background}">
     <slot>
-      <svg class="icon search-icon" aria-hidden="true">
+      <svg class="icon search-icon" aria-hidden="true" :style="iconStyle">
         <use xlink:href="#iconsearch"></use>
       </svg>
       <input
@@ -9,6 +9,7 @@
         :placeholder="placeholder"
         class="search-input"
         :class="{ 'search--round': shape == 'round' }"
+        :style="inputStyle"
         @compositionstart="isInputing = true"
         @input="!isInputing && $emit('input', $event.target.value)"
         @compositionend="onInputed"
@@ -19,7 +20,13 @@
 
 <script>
 export default {
-  props: ["placeholder", "background", "shape"],
+  props: {
+    "placeholder": String,
+    "background": String, 
+    "shape": String, 
+    "iconStyle": Object,
+    "inputStyle": Object
+  },
   data() {
     return {
       isInputing: false,
@@ -47,14 +54,15 @@ export default {
   justify-content: center;
   &-icon {
     position: absolute;
-    top: 17px;
+    top: 50%;
     left: 36px;
     width: 13px;
     height: 13px;
+    transform: translate(0, -50%)
   }
   &-input {
-    width: 300px;
-    height: 28px;
+    width: 80%;
+    height: 64%;
     padding-left: 32px;
     border: none;
     font-size: 13px;

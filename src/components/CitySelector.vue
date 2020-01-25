@@ -1,5 +1,5 @@
 <template>
-  <div class="city-selector">
+  <div class="selector" :style="{zindex: zindex}">
     <van-nav-bar left-arrow title="城市选择" @click-left="$emit('back')" class="navbar"></van-nav-bar>
     <search
       placeholder="输入城市名或拼音"
@@ -7,22 +7,27 @@
       background="linear-gradient(90deg, #0af, #0085ff)"
       shape="round"
     />
-    <div class="touch flex-item" @click="onSelectCity">
-      <van-index-bar
-        class="result-panel"
-        :index-list="indexList"
-        highlight-color="rgb(0, 136, 255)"
-        v-if="!value && !searchlist.length"
-        :sticky="false"
-      >
-        <div :id="key" v-for="(list, key) in citys" :key="key">
-          <van-index-anchor class="van-anchor" :index="key"/>
-          <van-cell :title="item" v-for="(item, index) in list" :key="index"/>
+    <div class="touch flex-item">
+      <van-cell-group title="当前定位城市" v-if="city">
+        <van-cell :title="city" />
+      </van-cell-group>
+      <div @click="onSelectCity">
+        <van-index-bar
+          class="result-panel"
+          :index-list="indexList"
+          highlight-color="rgb(0, 136, 255)"
+          v-if="!value && !searchlist.length"
+          :sticky="false"
+        >
+          <div :id="key" v-for="(list, key) in citys" :key="key">
+            <van-index-anchor class="van-anchor" :index="key" />
+            <van-cell :title="item" v-for="(item, index) in list" :key="index" />
+          </div>
+        </van-index-bar>
+        <div class="result-panel flex-center" v-if="value && !searchlist.length">无结果</div>
+        <div class="result-panel" v-if="value && searchlist.length">
+          <van-cell :title="item" v-for="(item, index) in searchlist" :key="index" />
         </div>
-      </van-index-bar>
-      <div class="result-panel flex-center" v-if="value && !searchlist.length">无结果</div>
-      <div class="result-panel" v-if="value && searchlist.length">
-        <van-cell :title="item" v-for="(item, index) in searchlist" :key="index"/>
       </div>
     </div>
   </div>
@@ -37,7 +42,8 @@ export default {
     data: {
       type: [Object],
       required: true
-    }
+    },
+    zindex: [String, Number]
   },
   components: {
     search
@@ -47,6 +53,7 @@ export default {
       value: "",
       indexList: [],
       citys: {},
+      firstCitys: {},
       show: true
     };
   },
@@ -96,9 +103,13 @@ export default {
       });
 
       return caseList;
+    },
+    city() {
+      return this.$store.state.city;
     }
   },
   mounted() {
+    this.firstCitys = Object.freeze({ A: this.data["A"] });
     this.onUpdateData();
     this.indexList = Object.keys(this.data);
     this.onSearchCitys = this._.debounce(
@@ -109,7 +120,7 @@ export default {
           return;
         }
         setTimeout(() => {
-          this.citys = Object.freeze({ A: this.data["A"] });
+          this.citys = this.firstCitys;
         });
       },
       20,
@@ -126,11 +137,15 @@ export default {
       if (!cell) {
         return;
       }
+      this.$store.commit("changeCity", cell.innerText);
       this.$emit("select", cell.innerText);
     },
     onSearchCitys() {},
     onUpdateData() {
-      this.citys = Object.freeze(Object.assign({}, this.data));
+      this.citys = this.firstCitys;
+      setTimeout(() => {
+        this.citys = this.data;
+      });
     }
   }
 };
@@ -142,16 +157,7 @@ export default {
     width: 100%;
     height: 100%;
     font-size: 14px;
+    background-color: #fff;
   }
-}
-.city-selector {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 10000;
-  display: flex;
-  flex-direction: column;
 }
 </style>
