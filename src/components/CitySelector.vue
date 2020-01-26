@@ -82,7 +82,6 @@ export default {
         list.push(...searchList);
       }
 
-      console.log(list)
       return list;
     },
     city() {
