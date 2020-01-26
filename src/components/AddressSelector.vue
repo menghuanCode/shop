@@ -8,12 +8,12 @@
       class="navbar"
     ></van-nav-bar>
     <div class="flex">
-      <span class="city" @click="$emit('selectCity')">
+      <div class="city" @click="$emit('selectCity')">
         <span class="flex-item van-ellipsis">{{city || '选择城市'}}</span>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconarrowdown-copy" />
         </svg>
-      </span>
+      </div>
       <div class="flex-item">
         <search
           class="address-search"
@@ -61,15 +61,19 @@ export default {
       value: "",
       indexList: [],
       show: true,
-      addressList: [{
-        username: '你好呀',
-        phone: '13411586357',
-        describe: '广东省广州市天河区凤凰街道渔西路163号广东省广州市天河区凤凰街道渔西路163号',
-      }, {
-        username: '张先生',
-        phone: '13411586357',
-        describe: '网咖先生(极点店)',
-      }]
+      addressList: [
+        {
+          username: "你好呀",
+          phone: "13411586357",
+          describe:
+            "广东省广州市天河区凤凰街道渔西路163号广东省广州市天河区凤凰街道渔西路163号"
+        },
+        {
+          username: "张先生",
+          phone: "13411586357",
+          describe: "网咖先生(极点店)"
+        }
+      ]
     };
   },
   computed: mapState(["city", "address"]),
@@ -110,6 +114,7 @@ export default {
   padding-left: 15px;
 }
 
+.city,
 .address-search {
   height: 54px;
 }

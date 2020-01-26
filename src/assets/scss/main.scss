@@ -116,3 +116,41 @@ a {
   z-index: 9999;
   background-color: rgba(0, 0, 0, 0.6);
 }
+
+.color {
+  &-b1 {
+    color: #333 !important;
+  }
+  &-b2 {
+    color: #666 !important;
+  }
+  &-b3 {
+    color: #999 !important;
+  }
+}
+
+.tag {
+  display: inline-block;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 1px 5px;
+  margin: 0px 6px 6px 0px;
+  &-xs {
+    font-size: 12px;
+    padding: 0 3px;
+    margin: 0px 4px 4px 0px;
+  }
+}
+
+.text-icon {
+  display: inline-block;
+  color: #fff;
+  margin-right: 5px;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  font-size: 12px;
+  border-radius: 2px;
+  text-align: center;
+  vertical-align: middle;
+}

@@ -30,3 +30,8 @@ vue-router
 0. 实现首页（50%）
 0. 优化选择城市的显示
 0. 使用 Vuex
+
+### v0.0.4
+0. 修复 Addrees Seletor 选择城市样式问题
+0. 完成 shop、shopActivity, rates 组件模板
+

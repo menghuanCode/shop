@@ -8,7 +8,7 @@
     >
       <div slot="left" class="font-lg flex-center">
         <van-icon name="location" />
-        <span class="address">未能获取地址</span>
+        <span class="address">{{address || '未能获取到地址'}}</span>
         <van-icon name="arrow-down" size="0.32rem" class="ml-1" />
       </div>
     </van-nav-bar>
@@ -22,46 +22,55 @@
         </div>
       </search>
     </van-sticky>
-    <div class="footenter">
-      <van-grid class="menu" center clickable :column-num="5" :border="false">
-        <van-grid-item v-for="(item, index) in menu" :key="index">
-          <div class="menu-item">
-            <van-image :src="item.pic" class="menu-pic" />
-            <div class="menu-text">{{item.text}}</div>
-          </div>
-        </van-grid-item>
-      </van-grid>
-    </div>
-    <section class="section">
-      <banner
-        class="banner"
-        title="品质套餐"
-        desc="搭配齐全吃得好"
-        link="立即抢购 >"
-        :pic="require('../assets/images/foods03.png')"
-      />
-      <div class="vipbar">
-        <div class="vipbar-content">
-          <img src="../assets/images/icon01.jpeg" alt class="mr-1" />
-          <span class="font-sm font-bold mr-1">超级会员</span>
-          <span class="font-xs">
-            <b class="dot"></b>每月领20元红包
-          </span>
-        </div>
-        <a href="javascript:;" class="vipbar-link">立即开通</a>
-      </div>
-    </section>
-    <div class="shoplist-title">推荐商家</div>
-    <FoodFilter class="home-filter" :morefilter="morefilter" />
-    <PageAction :pic="require('../assets/images/no01.gif')" title="输入地址后才能订餐哦！" button="手动选择地址" />
-    <PageAction :pic="require('../assets/images/no01.gif')" title="输入地址后才能订餐哦！" button="手动选择地址" />
-    <PageAction :pic="require('../assets/images/no01.gif')" title="输入地址后才能订餐哦！" button="手动选择地址" />
     <PageAction
-      :pic="require('../assets/images/no02.png')"
-      title="没有结果"
-      text="登录后查看更多商家"
-      button="登录"
+      :pic="require('../assets/images/no01.gif')"
+      title="输入地址后才能订餐哦！"
+      button="手动选择地址"
+      @click="isLocation = true"
     />
+    <div v-if="address">
+      <div class="footenter">
+        <van-grid class="menu" center clickable :column-num="5" :border="false">
+          <van-grid-item v-for="(item, index) in menu" :key="index">
+            <div class="menu-item">
+              <van-image :src="item.pic" class="menu-pic" />
+              <div class="menu-text">{{item.text}}</div>
+            </div>
+          </van-grid-item>
+        </van-grid>
+      </div>
+      <section class="section">
+        <banner
+          class="banner"
+          title="品质套餐"
+          desc="搭配齐全吃得好"
+          link="立即抢购 >"
+          :pic="require('../assets/images/foods03.png')"
+        />
+        <div class="vipbar">
+          <div class="vipbar-content">
+            <img src="../assets/images/icon01.jpeg" alt class="mr-1" />
+            <span class="font-sm font-bold mr-1">超级会员</span>
+            <span class="font-xs">
+              <b class="dot"></b>每月领20元红包
+            </span>
+          </div>
+          <a href="javascript:;" class="vipbar-link">立即开通</a>
+        </div>
+      </section>
+      <div class="shoplist-title">推荐商家</div>
+      <FoodFilter class="home-filter" :morefilter="morefilter" />
+      <div class="home-shop">
+        <shop />
+        <shop-activity />
+      </div>
+      <PageAction
+        :pic="require('../assets/images/no02.png')"
+        title="没有结果"
+        text="登录后查看更多商家"
+        button="登录"
+      />
+    </div>
     <transition name="sildeleft">
       <AddressSelector
         v-if="isLocation"
@@ -89,6 +98,9 @@ import CitySelector from "@/components/CitySelector.vue";
 import AddressSelector from "@/components/AddressSelector.vue";
 import FoodFilter from "@/components/FoodsFilter.vue";
 import PageAction from "@/components/PageAction.vue";
+import shop from "@/components/pages/shop.vue";
+import shopActivity from "@/components/pages/shopActivity.vue";
+import { mapState } from "vuex";
 
 export default {
   name: "home",
@@ -96,7 +108,6 @@ export default {
     return {
       citys: Object.freeze(citys),
       morefilter: Object.freeze(morefilter),
-      city: "",
       isLocation: false,
       isCitySelection: false,
       openFilter: false,
@@ -142,8 +153,11 @@ export default {
     search,
     banner,
     FoodFilter,
-    PageAction
+    PageAction,
+    shop,
+    shopActivity
   },
+  computed: mapState(["city", "address"]),
   methods: {
     getSelectCity(city) {
       this.city = city;
@@ -251,6 +265,15 @@ export default {
     margin: 0 1.066667vw;
     font-weight: 700;
   }
+}
+
+.home-shop {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f2f2f2;
+}
+
+.shop-activity {
+  padding-left: 86px;
 }
 
 .shoplist {

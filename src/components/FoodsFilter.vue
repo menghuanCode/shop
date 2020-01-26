@@ -157,6 +157,7 @@ export default {
       this.openShade = false;
       this.openFilter = false;
       document.body.style.overflow = "auto";
+      document.body.style.height = "auto";
     },
     onTogglePanel(panel) {
       let isOpen = false;
@@ -176,8 +177,9 @@ export default {
 
       this.openShade = isOpen;
       let offsetTop = this.$refs["foodsFilter"].offsetTop;
-      window.scrollTo(0, offsetTop);
       document.body.style.overflow = isOpen ? "hidden" : "auto";
+      document.body.style.height = isOpen ? '100000px' : "auto";
+      window.scrollTo(0, offsetTop);
     },
     onResetAjax() {
       this.onCloseShade();
@@ -214,8 +216,6 @@ export default {
 
       let cells = panel.querySelectorAll(".morefilter__cell.active");
       cells.forEach(item => item.classList.remove("active"));
-
-      console.log(panel);
     },
     onConfirmFilter(event) {
       let panel = this.utils.queryPathSelector(event, "filter-extend");
