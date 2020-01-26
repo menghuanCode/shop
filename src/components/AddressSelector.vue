@@ -9,7 +9,7 @@
     ></van-nav-bar>
     <div class="flex">
       <div class="city" @click="$emit('selectCity')">
-        <span class="flex-item van-ellipsis">{{city || '选择城市'}}</span>
+        <span class="flex-item van-ellipsis">{{city.name || '选择城市'}}</span>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconarrowdown-copy" />
         </svg>

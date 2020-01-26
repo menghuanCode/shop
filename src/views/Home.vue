@@ -90,7 +90,6 @@
 </template>
 
 <script>
-import citys from "../assets/json/citys.json";
 import morefilter from "../assets/json/morefilter.json";
 import search from "@/components/pages/search.vue";
 import banner from "@/components/adversiting/banner.vue";
@@ -106,7 +105,7 @@ export default {
   name: "home",
   data() {
     return {
-      citys: Object.freeze(citys),
+      citys: {},
       morefilter: Object.freeze(morefilter),
       isLocation: false,
       isCitySelection: false,
@@ -158,9 +157,16 @@ export default {
     shopActivity
   },
   computed: mapState(["city", "address"]),
+  mounted() {
+    this.citys = Object.freeze(JSON.parse(this.utils.storageGetter('cityList')))
+    if(!this.citys) {
+      let cityList = require('../assets/json/cityList.json')
+      this.citys = cityList
+      this.utils.storageSetter('cityList', JSON.stringify(cityList))
+    }
+  },
   methods: {
-    getSelectCity(city) {
-      this.city = city;
+    getSelectCity() {
       this.isCitySelection = false;
     },
     onCloseShade() {}

@@ -9,24 +9,24 @@
     />
     <div class="touch flex-item">
       <van-cell-group title="当前定位城市" v-if="city">
-        <van-cell :title="city" />
+        <van-cell :title="city.name" />
       </van-cell-group>
-      <div @click="onSelectCity">
+      <div class="view" @click="onSelectCity">
         <van-index-bar
-          class="result-panel"
+          class="result"
           :index-list="indexList"
           highlight-color="rgb(0, 136, 255)"
           v-if="!value && !searchlist.length"
           :sticky="false"
         >
           <div :id="key" v-for="(list, key) in citys" :key="key">
-            <van-index-anchor class="van-anchor" :index="key" />
-            <van-cell :title="item" v-for="(item, index) in list" :key="index" />
+            <van-index-anchor class="van-anchor" :index="list.idx" />
+            <van-cell :title="item.name" v-for="(item, index) in list.cities" :key="index" />
           </div>
         </van-index-bar>
-        <div class="result-panel flex-center" v-if="value && !searchlist.length">无结果</div>
-        <div class="result-panel" v-if="value && searchlist.length">
-          <van-cell :title="item" v-for="(item, index) in searchlist" :key="index" />
+        <div class="result flex-center" v-if="value && !searchlist.length">无结果</div>
+        <div class="result" v-if="value && searchlist.length">
+          <van-cell :title="item.name" v-for="(item, index) in searchlist" :key="index" />
         </div>
       </div>
     </div>
@@ -35,7 +35,6 @@
 
 <script>
 import search from "@/components/pages/search";
-import pinyin4js from "pinyin4js";
 
 export default {
   props: {
@@ -52,8 +51,8 @@ export default {
     return {
       value: "",
       indexList: [],
-      citys: {},
-      firstCitys: {},
+      citys: [],
+      firstCitys: [],
       show: true
     };
   },
@@ -63,72 +62,42 @@ export default {
         return [];
       }
 
+
+      let value = this.value.toLowerCase();
+      let isPinyin = /^[A-Za-z]+$/.test(value);
+      let isNumber = /\d/.test(value);
+
+      // 数字无效
+      if (isNumber) {
+        return [];
+      }
+
       let list = [];
-      let initial = "";
-      let chineseReg = /[\u4e00-\u9fa5]+/;
-      let isChinese = this.value.match(chineseReg);
 
-      initial = pinyin4js.convertToPinyinString(
-        this.value.charAt(0),
-        "",
-        pinyin4js.WITHOUT_TONE
-      );
+      for (let { cities } of this.data.cityList) {
+        let searchList = isPinyin
+          ? cities.filter(item => item.pinyin.indexOf(value) !== -1)
+          : cities.filter(item => item.name.indexOf(value) !== -1);
 
-      list = this.data[initial[0].toLocaleUpperCase()] || [];
-      // 如果没有值，表示无结果
-      if (!list.length) {
-        return list;
+        list.push(...searchList);
       }
 
-      let textList = list.filter(item => item.match(this.value));
-      // 如果輸入的是中文
-      if (isChinese) {
-        return textList;
-      }
-
-      let valuePinyin = pinyin4js.convertToPinyinString(
-        this.value,
-        "",
-        pinyin4js.WITHOUT_TONE
-      );
-
-      // 拼音列表
-      let caseList = list.filter(item => {
-        let itemPinyin = pinyin4js.convertToPinyinString(
-          item,
-          "",
-          pinyin4js.WITHOUT_TONE
-        );
-        return itemPinyin.match(valuePinyin);
-      });
-
-      return caseList;
+      console.log(list)
+      return list;
     },
     city() {
-      return this.$store.state.city;
+      if (!this.value) {
+        return this.$store.state.city;
+      }
+
+      return null;
     }
   },
   mounted() {
-    this.firstCitys = Object.freeze({ A: this.data["A"] });
+    this.firstCitys = Object.freeze([this.data.cityList[0]]);
     this.onUpdateData();
-    this.indexList = Object.keys(this.data);
-    this.onSearchCitys = this._.debounce(
-      value => {
-        this.value = value;
-        if (!value) {
-          setTimeout(this.onUpdateData);
-          return;
-        }
-        setTimeout(() => {
-          this.citys = this.firstCitys;
-        });
-      },
-      20,
-      {
-        leading: false,
-        maxWait: 200
-      }
-    );
+    this.indexList = this.data.alphabet;
+    this.onSearchCitys = this._.debounce(this._searchCitys, 20, { leading: false, maxWait:200 })
   },
   methods: {
     onSelectCity(e) {
@@ -137,14 +106,36 @@ export default {
       if (!cell) {
         return;
       }
-      this.$store.commit("changeCity", cell.innerText);
-      this.$emit("select", cell.innerText);
+
+      let name = cell.innerText;
+      let city = {};
+      for (let { cities } of this.citys) {
+        let querys = cities.filter(item => item.name.indexOf(name) !== -1);
+        if (querys.length) {
+          city = querys[0];
+          break;
+        }
+      }
+
+      this.$store.commit("changeCity", city);
+      this.$emit("select", city);
     },
-    onSearchCitys() {},
     onUpdateData() {
       this.citys = this.firstCitys;
       setTimeout(() => {
-        this.citys = this.data;
+        this.citys = Object.freeze(this.data.cityList);
+      });
+    },
+    onSearchCitys() {},
+    _searchCitys(value) {
+      this.value = value;
+      if (!value) {
+        setTimeout(this.onUpdateData);
+        return;
+      }
+
+      setTimeout(() => {
+        this.citys = this.firstCitys;
       });
     }
   }
@@ -153,11 +144,9 @@ export default {
 
 <style lang="scss" scoped>
 .result {
-  &-panel {
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    background-color: #fff;
-  }
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
+  background-color: #fff;
 }
 </style>
