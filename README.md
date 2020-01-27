@@ -35,3 +35,6 @@ vue-router
 0. 修复 Addrees Seletor 选择城市样式问题
 0. 完成 shop、shopActivity, rates 组件模板
 
+### v0.0.5
+0. 实现登录页面
+

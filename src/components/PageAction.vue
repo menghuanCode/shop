@@ -16,6 +16,7 @@ export default {
 <style lang="scss" scoped>
 .action {
   text-align: center;
+  padding-bottom: 10px;
   &-pic {
     width: 200px;
   }

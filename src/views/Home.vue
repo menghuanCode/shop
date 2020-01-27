@@ -8,7 +8,7 @@
     >
       <div slot="left" class="font-lg flex-center">
         <van-icon name="location" />
-        <span class="address">{{address || '未能获取到地址'}}</span>
+        <span class="address">{{address.name || '未能获取到地址'}}</span>
         <van-icon name="arrow-down" size="0.32rem" class="ml-1" />
       </div>
     </van-nav-bar>
@@ -23,6 +23,7 @@
       </search>
     </van-sticky>
     <PageAction
+      v-if="!address"
       :pic="require('../assets/images/no01.gif')"
       title="输入地址后才能订餐哦！"
       button="手动选择地址"
@@ -60,7 +61,7 @@
       </section>
       <div class="shoplist-title">推荐商家</div>
       <FoodFilter class="home-filter" :morefilter="morefilter" />
-      <div class="home-shop">
+      <div class="home-shop" v-if="isLogin">
         <shop />
         <shop-activity />
       </div>
@@ -69,6 +70,7 @@
         title="没有结果"
         text="登录后查看更多商家"
         button="登录"
+        @click="$router.push({name: 'login'})"
       />
     </div>
     <transition name="sildeleft">
@@ -108,6 +110,7 @@ export default {
       citys: {},
       morefilter: Object.freeze(morefilter),
       isLocation: false,
+      isLogin: false,
       isCitySelection: false,
       openFilter: false,
       menu: [

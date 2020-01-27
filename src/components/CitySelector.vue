@@ -7,7 +7,7 @@
       background="linear-gradient(90deg, #0af, #0085ff)"
       shape="round"
     />
-    <div class="touch flex-item">
+    <div class="touch">
       <van-cell-group title="当前定位城市" v-if="city">
         <van-cell :title="city.name" />
       </van-cell-group>
@@ -148,4 +148,7 @@ export default {
   font-size: 14px;
   background-color: #fff;
 }
+
+
+
 </style>
