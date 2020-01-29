@@ -1,11 +1,16 @@
 <template>
   <div class="address">
     <slot>
-      <p>
-        <span class="username">{{data.username}}</span>
-        <span class="phone">{{data.phone}}</span>
-      </p>
-      <p class="describe">{{data.describe}}</p>
+      <div class="address-content">
+        <p>
+          <span class="username">{{data.username}}</span>
+          <span class="phone">{{data.phone}}</span>
+        </p>
+        <p class="describe">{{data.describe}}</p>
+      </div>
+      <div class="address-handler">
+        <van-icon name="edit" class="address-btn" v-if="data.edit" />
+      </div>
     </slot>
   </div>
 </template>
@@ -38,11 +43,28 @@ export default {
   font-weight: normal;
   white-space: inherit;
   color: #333;
+  display: flex;
+  align-items: center;
+  &:active {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
   + .address {
     border-top: 1px solid #eee;
   }
+  &-content {
+    flex: 1;
+  }
+  &-handler {
+    margin-left: 20px;
+  }
+  &-btn {
+    font-size: 20px;
+    padding: 10px;
+    + &-btn {
+      margin-left: 5px;
+    }
+  }
 }
-
 
 .username {
   font-size: 14px;

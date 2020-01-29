@@ -35,7 +35,7 @@ $theme-directions: map-merge(
   }
 }
 
-@for $i from 0 to 5 {
+@for $i from 0 to 6 {
   @each $item, $abd in $theme-directions {
     .m#{$abd}-#{$i} {
       margin-#{$item}: $i * 5px;

@@ -9,7 +9,7 @@
     ></van-nav-bar>
     <div class="flex">
       <div class="city" @click="$emit('selectCity')">
-        <span class="flex-item van-ellipsis">{{city.name || '选择城市'}}</span>
+        <span class="flex-item van-ellipsis">{{city || '选择城市'}}</span>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#iconarrowdown-copy" />
         </svg>
@@ -28,7 +28,7 @@
       <van-cell-group title="当前地址">
         <van-cell>
           <div class="flex">
-            <div class="current-address">{{address || '未知地址'}}</div>
+            <div class="current-address">{{address.name || '未知地址'}}</div>
             <div class="reset-location">
               <svg class="icon pr-1" aria-hidden="true">
                 <use xlink:href="#iconaim" />

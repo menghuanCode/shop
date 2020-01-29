@@ -10,6 +10,8 @@
 .van-index-bar__sidebar {
   margin-top: 20px;
   margin-right: 6px;
+  top: 120px;
+  transform: unset;
 }
 
 .van-index-anchor {
@@ -23,4 +25,30 @@
 
 .van-cell-group__title {
   color: #666;
+}
+
+.van-panel__footer {
+  padding: 0;
+}
+
+
+.cell {
+  &-center {
+    .van-cell__value {
+      display: flex;
+      align-items: center; 
+    }   
+  }
+}
+
+.navbar .van-nav-bar__text {
+  color: #fff;
+}
+
+.navbar .van-nav-bar__text:active {
+  background-color: transparent;
+}
+
+[class*=van-hairline]::after {
+  content: unset;
 }

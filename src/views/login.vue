@@ -5,8 +5,8 @@
     </div>
     <div class="loginform">
       <div class="loginform-line">
-        <van-field v-model="sms"  placeholder="手机号" class="loginform-cell">
-          <van-button slot="button" size="small" type="primary">获取验证码</van-button>
+        <van-field v-model="sms" placeholder="手机号" class="loginform-cell">
+          <van-button slot="button" size="small" class="sms-btn">获取验证码</van-button>
         </van-field>
       </div>
       <div class="loginform-line">
@@ -101,5 +101,11 @@ export default {
   line-height: 42px;
   outline: none;
   border: none;
+}
+
+.sms-btn {
+  background-color: transparent;
+  border: none;
+  color: #999;
 }
 </style>

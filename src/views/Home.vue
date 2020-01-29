@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="page">
     <van-nav-bar
       left-arrow
       left-text="正在获取地址中..."
@@ -33,10 +33,10 @@
       <div class="footenter">
         <van-grid class="menu" center clickable :column-num="5" :border="false">
           <van-grid-item v-for="(item, index) in menu" :key="index">
-            <div class="menu-item">
+            <router-link to="shops" class="menu-item">
               <van-image :src="item.pic" class="menu-pic" />
               <div class="menu-text">{{item.text}}</div>
-            </div>
+            </router-link>
           </van-grid-item>
         </van-grid>
       </div>
@@ -161,11 +161,13 @@ export default {
   },
   computed: mapState(["city", "address"]),
   mounted() {
-    this.citys = Object.freeze(JSON.parse(this.utils.storageGetter('cityList')))
-    if(!this.citys) {
-      let cityList = require('../assets/json/cityList.json')
-      this.citys = cityList
-      this.utils.storageSetter('cityList', JSON.stringify(cityList))
+    this.citys = Object.freeze(
+      JSON.parse(this.utils.storageGetter("cityList"))
+    );
+    if (!this.citys) {
+      let cityList = require("../assets/json/cityList.json");
+      this.citys = cityList;
+      this.utils.storageSetter("cityList", JSON.stringify(cityList));
     }
   },
   methods: {

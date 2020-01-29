@@ -7,27 +7,25 @@
       background="linear-gradient(90deg, #0af, #0085ff)"
       shape="round"
     />
-    <div class="touch">
+    <div class="result-panel" @click="onSelectCity">
       <van-cell-group title="当前定位城市" v-if="city">
-        <van-cell :title="city.name" />
+        <van-cell :title="city" />
       </van-cell-group>
-      <div class="view" @click="onSelectCity">
-        <van-index-bar
-          class="result"
-          :index-list="indexList"
-          highlight-color="rgb(0, 136, 255)"
-          v-if="!value && !searchlist.length"
-          :sticky="false"
-        >
-          <div :id="key" v-for="(list, key) in citys" :key="key">
-            <van-index-anchor class="van-anchor" :index="list.idx" />
-            <van-cell :title="item.name" v-for="(item, index) in list.cities" :key="index" />
-          </div>
-        </van-index-bar>
-        <div class="result flex-center" v-if="value && !searchlist.length">无结果</div>
-        <div class="result" v-if="value && searchlist.length">
-          <van-cell :title="item.name" v-for="(item, index) in searchlist" :key="index" />
+      <van-index-bar
+        class="result"
+        :index-list="indexList"
+        :sticky="false"
+        highlight-color="rgb(0, 136, 255)"
+        v-if="!value && !searchlist.length"
+      >
+        <div v-for="(list, key) in citys" :key="key">
+          <van-index-anchor class="van-anchor" :index="list.idx" />
+          <van-cell :title="item.name" v-for="(item, index) in list.cities" :key="index" />
         </div>
+      </van-index-bar>
+      <div class="no-result" v-if="value && !searchlist.length">无结果</div>
+      <div v-if="value && searchlist.length">
+        <van-cell :title="item.name" v-for="(item, index) in searchlist" :key="index" />
       </div>
     </div>
   </div>
@@ -62,7 +60,6 @@ export default {
         return [];
       }
 
-
       let value = this.value.toLowerCase();
       let isPinyin = /^[A-Za-z]+$/.test(value);
       let isNumber = /\d/.test(value);
@@ -96,7 +93,10 @@ export default {
     this.firstCitys = Object.freeze([this.data.cityList[0]]);
     this.onUpdateData();
     this.indexList = this.data.alphabet;
-    this.onSearchCitys = this._.debounce(this._searchCitys, 20, { leading: false, maxWait:200 })
+    this.onSearchCitys = this._.debounce(this._searchCitys, 20, {
+      leading: false,
+      maxWait: 200
+    });
   },
   methods: {
     onSelectCity(e) {
@@ -107,17 +107,8 @@ export default {
       }
 
       let name = cell.innerText;
-      let city = {};
-      for (let { cities } of this.citys) {
-        let querys = cities.filter(item => item.name.indexOf(name) !== -1);
-        if (querys.length) {
-          city = querys[0];
-          break;
-        }
-      }
-
-      this.$store.commit("changeCity", city);
-      this.$emit("select", city);
+      this.$store.commit("changeCity", name);
+      this.$emit("select", name);
     },
     onUpdateData() {
       this.citys = this.firstCitys;
@@ -142,13 +133,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.result {
-  width: 100%;
-  height: 100%;
+
+.result-panel {
+  position: absolute;
+  top: 90px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
   font-size: 14px;
   background-color: #fff;
+  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
+.no-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 14px;
+  color: #666;
+}
 
-
+.van-cell-group__title {
+  background-color: #f5f5f5;
+}
 </style>

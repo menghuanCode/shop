@@ -3,7 +3,9 @@
     <img :src="pic" alt class="action-pic" />
     <div class="action-title">{{title}}</div>
     <div class="action-text">{{text}}</div>
-    <button class="action-button" @click="$emit('click', $event)">{{button}}</button>
+    <slot>
+      <button class="action-button" @click="$emit('click', $event)">{{button}}</button>
+    </slot>
   </div>
 </template>
 
