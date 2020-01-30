@@ -182,7 +182,7 @@ export default {
 <style lang="scss" scoped>
 .sildeleft-enter-active,
 .sildeleft-leave-active {
-  transition: transform 0.2s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 }
 .sildeleft-enter, .sildeleft-leave-to /* .sildeleft-leave-active below version 2.1.8 */ {
   transform: translate3d(100%, 0, 0);

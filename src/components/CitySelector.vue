@@ -8,6 +8,8 @@
       shape="round"
     />
     <div class="result-panel" @click="onSelectCity">
+      <span  v-for="(item, key) in test" :key="key">{{item}}</span>
+      
       <van-cell-group title="当前定位城市" v-if="city">
         <van-cell :title="city" />
       </van-cell-group>
@@ -20,12 +22,12 @@
       >
         <div v-for="(list, key) in citys" :key="key">
           <van-index-anchor class="van-anchor" :index="list.idx" />
-          <van-cell :title="item.name" v-for="(item, index) in list.cities" :key="index" />
+          <div class="city-cell" v-for="item in list.cities" :key="item.name">{{item.name}}</div>
         </div>
       </van-index-bar>
       <div class="no-result" v-if="value && !searchlist.length">无结果</div>
-      <div v-if="value && searchlist.length">
-        <van-cell :title="item.name" v-for="(item, index) in searchlist" :key="index" />
+      <div v-if="value && searchlist.length" class="search-result">
+        <div class="city-cell" v-for="(item, index) in searchlist" :key="index">{{item.name}}</div>
       </div>
     </div>
   </div>
@@ -50,8 +52,8 @@ export default {
       value: "",
       indexList: [],
       citys: [],
-      firstCitys: [],
-      show: true
+      show: true,
+      test: []
     };
   },
   computed: {
@@ -90,7 +92,6 @@ export default {
     }
   },
   mounted() {
-    this.firstCitys = Object.freeze([this.data.cityList[0]]);
     this.onUpdateData();
     this.indexList = this.data.alphabet;
     this.onSearchCitys = this._.debounce(this._searchCitys, 20, {
@@ -100,7 +101,7 @@ export default {
   },
   methods: {
     onSelectCity(e) {
-      let cell = this.utils.queryPathSelector(e, "van-cell");
+      let cell = this.utils.queryPathSelector(e, "city-cell");
       // 如果不是选择城市
       if (!cell) {
         return;
@@ -111,10 +112,15 @@ export default {
       this.$emit("select", name);
     },
     onUpdateData() {
-      this.citys = this.firstCitys;
-      setTimeout(() => {
-        this.citys = Object.freeze(this.data.cityList);
-      });
+      // 如果等价，就停止
+      if(this.citys.length === this.data.cityList.length) {
+        return;
+      }
+
+      let len = this.citys.length
+      let data = this.data.cityList.filter((item, index) => index <= len)
+      this.citys = Object.freeze(data)
+      requestAnimationFrame(this.onUpdateData)
     },
     onSearchCitys() {},
     _searchCitys(value) {
@@ -125,7 +131,7 @@ export default {
       }
 
       setTimeout(() => {
-        this.citys = this.firstCitys;
+        this.citys = Object.freeze([this.data.cityList[0]]);
       });
     }
   }
@@ -133,7 +139,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .result-panel {
   position: absolute;
   top: 90px;
@@ -146,6 +151,8 @@ export default {
   overflow: hidden;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  will-change: scroll-position;
+  opacity: 1;
 }
 
 .no-result {
@@ -159,5 +166,15 @@ export default {
 
 .van-cell-group__title {
   background-color: #f5f5f5;
+}
+
+.search-result {
+  opacity: 1;
+}
+
+.city-cell {
+  line-height: 44px;
+  margin-left: 15px;
+  border-bottom: 1px solid #f2f2f2;
 }
 </style>
