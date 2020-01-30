@@ -8,8 +8,8 @@
       shape="round"
     />
     <div class="result-panel" @click="onSelectCity">
-      <span  v-for="(item, key) in test" :key="key">{{item}}</span>
-      
+      <span v-for="(item, key) in test" :key="key">{{item}}</span>
+
       <van-cell-group title="当前定位城市" v-if="city">
         <van-cell :title="city" />
       </van-cell-group>
@@ -113,27 +113,27 @@ export default {
     },
     onUpdateData() {
       // 如果等价，就停止
-      if(this.citys.length === this.data.cityList.length) {
+      if (this.citys.length === this.data.cityList.length) {
         return;
       }
 
-      let len = this.citys.length
-      let data = this.data.cityList.filter((item, index) => index <= len)
-      this.citys = Object.freeze(data)
-      requestAnimationFrame(this.onUpdateData)
+      let len = this.citys.length;
+      let data = this.data.cityList.filter((item, index) => index <= len);
+      this.citys = Object.freeze(data);
+      requestAnimationFrame(this.onUpdateData);
     },
     onSearchCitys() {},
     _searchCitys(value) {
       this.value = value;
       if (!value) {
-        setTimeout(this.onUpdateData);
+        this.onUpdateData();
         return;
       }
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         this.citys = Object.freeze([this.data.cityList[0]]);
       });
-    }
+    },
   }
 };
 </script>
