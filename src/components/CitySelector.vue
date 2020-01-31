@@ -53,7 +53,7 @@ export default {
       indexList: [],
       citys: [],
       show: true,
-      test: []
+      test: [],
     };
   },
   computed: {
@@ -113,7 +113,8 @@ export default {
     },
     onUpdateData() {
       // 如果等价，就停止
-      if (this.citys.length === this.data.cityList.length) {
+      // 如果搜索中也停止
+      if (this.citys.length === this.data.cityList.length || this.value.length) {
         return;
       }
 
