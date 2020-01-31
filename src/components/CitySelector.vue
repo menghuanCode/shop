@@ -1,5 +1,5 @@
 <template>
-  <div class="selector" :style="{zindex: zindex}">
+  <div class="selector">
     <van-nav-bar left-arrow title="城市选择" @click-left="$emit('back')" class="navbar"></van-nav-bar>
     <search
       placeholder="输入城市名或拼音"
@@ -37,13 +37,6 @@
 import search from "@/components/pages/search";
 
 export default {
-  props: {
-    data: {
-      type: [Object],
-      required: true
-    },
-    zindex: [String, Number]
-  },
   components: {
     search
   },
@@ -54,6 +47,7 @@ export default {
       citys: [],
       show: true,
       test: [],
+      data: {}
     };
   },
   computed: {
@@ -93,8 +87,8 @@ export default {
   },
   mounted() {
     this.onUpdateData();
-    this.indexList = this.data.alphabet;
-    this.onSearchCitys = this._.debounce(this._searchCitys, 20, {
+    this.onRenderData();
+    this.onSearchCitys = this._.debounce(this._onSearchCitys, 20, {
       leading: false,
       maxWait: 200
     });
@@ -112,29 +106,43 @@ export default {
       this.$emit("select", name);
     },
     onUpdateData() {
+      this.data = Object.freeze(
+        JSON.parse(this.utils.storageGetter("cityList"))
+      );
+      if (!this.data) {
+        let cityList = require("../assets/json/cityList.json");
+        this.data = cityList;
+        this.utils.storageSetter("cityList", JSON.stringify(cityList));
+      }
+      this.indexList = this.data.alphabet;
+    },
+    onRenderData() {
       // 如果等价，就停止
       // 如果搜索中也停止
-      if (this.citys.length === this.data.cityList.length || this.value.length) {
+      if (
+        this.citys.length === this.data.cityList.length ||
+        this.value.length
+      ) {
         return;
       }
 
       let len = this.citys.length;
       let data = this.data.cityList.filter((item, index) => index <= len);
       this.citys = Object.freeze(data);
-      requestAnimationFrame(this.onUpdateData);
+      requestAnimationFrame(this.onRenderData);
     },
     onSearchCitys() {},
-    _searchCitys(value) {
+    _onSearchCitys(value) {
       this.value = value;
       if (!value) {
-        this.onUpdateData();
+        this.onRenderData();
         return;
       }
 
       requestAnimationFrame(() => {
         this.citys = Object.freeze([this.data.cityList[0]]);
       });
-    },
+    }
   }
 };
 </script>

@@ -83,7 +83,6 @@
     </transition>
     <CitySelector
       v-if="isCitySelection"
-      :data="citys"
       @select="getSelectCity"
       @back="isCitySelection = false"
       zindex="9999"
@@ -107,7 +106,6 @@ export default {
   name: "home",
   data() {
     return {
-      citys: {},
       morefilter: Object.freeze(morefilter),
       isLocation: false,
       isLogin: false,
@@ -160,16 +158,6 @@ export default {
     shopActivity
   },
   computed: mapState(["city", "address"]),
-  mounted() {
-    this.citys = Object.freeze(
-      JSON.parse(this.utils.storageGetter("cityList"))
-    );
-    if (!this.citys) {
-      let cityList = require("../assets/json/cityList.json");
-      this.citys = cityList;
-      this.utils.storageSetter("cityList", JSON.stringify(cityList));
-    }
-  },
   methods: {
     getSelectCity() {
       this.isCitySelection = false;
