@@ -61,9 +61,6 @@ export default {
   },
   methods: {
     onClickModal(event) {
-      let handler = this.utils.queryPathSelector(event, "j_handler");
-
-      // 关闭 modal
       if (!handler) {
         return (this.openModal = false);
       }

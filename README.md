@@ -9,6 +9,7 @@ lib-flexiable
 vant
 vuex
 vue-router
+axios
 
 
 ### 2020/1/19 
@@ -46,3 +47,13 @@ vue-router
 
 ### v0.0.7
 0. 全面优化城市选择控件，实现无卡顿效果
+
+### v0.0.8
+0. 引入 Fastclick, 取消 click 事件的 300ms 延迟
+0. 使用 axios 请求 api
+
+
+### v0.1.0
+0. 在 APP.vue 中使用 keep-alive 缓存页面和组件
+0. vant 改成 按需引入
+0. 修改页面代码结构

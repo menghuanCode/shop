@@ -82,7 +82,7 @@
       />
     </transition>
     <CitySelector
-      v-if="isCitySelection"
+      v-if="isCitySelection" 
       @select="getSelectCity"
       @back="isCitySelection = false"
       zindex="9999"

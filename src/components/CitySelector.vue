@@ -9,32 +9,29 @@
     />
     <div class="result-panel" @click="onSelectCity">
       <span v-for="(item, key) in test" :key="key">{{item}}</span>
-
       <van-cell-group title="当前定位城市" v-if="city">
         <van-cell :title="city" />
       </van-cell-group>
-      <van-index-bar
-        class="result"
-        :index-list="indexList"
-        :sticky="false"
-        highlight-color="rgb(0, 136, 255)"
-        v-if="!value && !searchlist.length"
-      >
-        <div v-for="(list, key) in citys" :key="key">
-          <van-index-anchor class="van-anchor" :index="list.idx" />
-          <div class="city-cell" v-for="item in list.cities" :key="item.name">{{item.name}}</div>
+      <div v-once id="list" v-if="!value && !searchlist.length">
+        <div :id="list.idx" v-for="(list, key) of data.cityList" :key="key">
+          <div class="city-anchor">{{list.idx}}</div>
+          <div class="city-cell" v-for="item of list.cities" :key="item.name">{{item.name}}</div>
         </div>
-      </van-index-bar>
-      <div class="no-result" v-if="value && !searchlist.length">无结果</div>
-      <div v-if="value && searchlist.length" class="search-result">
-        <div class="city-cell" v-for="(item, index) in searchlist" :key="index">{{item.name}}</div>
       </div>
+      <div v-once class="no-result" v-else-if="value && !searchlist.length">无结果</div>
+      <div v-else class="search-result">
+        <div class="city-cell" v-for="item of searchlist" :key="item.name">{{item.name}}</div>
+      </div>
+    </div>
+    <div v-once class="alphabet" v-if="!value" @click="onSelectAlphabet">
+      <span class="alphabet-item" v-for="item of data.alphabet" :key="item">{{item}}</span>
     </div>
   </div>
 </template>
 
 <script>
 import search from "@/components/pages/search";
+import debounce from "../helper/debounce";
 
 export default {
   components: {
@@ -43,8 +40,6 @@ export default {
   data() {
     return {
       value: "",
-      indexList: [],
-      citys: [],
       show: true,
       test: [],
       data: {}
@@ -85,14 +80,16 @@ export default {
       return null;
     }
   },
-  mounted() {
-    this.onUpdateData();
-    this.onRenderData();
-    this.onSearchCitys = this._.debounce(this._onSearchCitys, 20, {
-      leading: false,
-      maxWait: 200
-    });
+  created() {
+    if (!this.utils.storageGetter("cityList")) {
+      let cityList = require("../assets/json/cityList.json");
+      this.data = cityList;
+      this.utils.storageSetter("cityList", JSON.stringify(cityList));
+      return;
+    }
+    this.data = Object.freeze(JSON.parse(this.utils.storageGetter("cityList")));
   },
+  mounted() {},
   methods: {
     onSelectCity(e) {
       let cell = this.utils.queryPathSelector(e, "city-cell");
@@ -101,48 +98,29 @@ export default {
         return;
       }
 
-      let name = cell.innerText;
-      this.$store.commit("changeCity", name);
-      this.$emit("select", name);
+      let cities = this.data.cityList.filter(
+        item => item.idx === cell.parentElement.id
+      )[0].cities;
+      let city = cities.filter(item => item.name === cell.innerText)[0];
+      alert(JSON.stringify(city), cell.innerText);
+      // let name = cell.innerText;
+      // this.$store.commit("setCity", name);
+      // this.$emit("select", name);
     },
-    onUpdateData() {
-      this.data = Object.freeze(
-        JSON.parse(this.utils.storageGetter("cityList"))
-      );
-      if (!this.data) {
-        let cityList = require("../assets/json/cityList.json");
-        this.data = cityList;
-        this.utils.storageSetter("cityList", JSON.stringify(cityList));
-      }
-      this.indexList = this.data.alphabet;
-    },
-    onRenderData() {
-      // 如果等价，就停止
-      // 如果搜索中也停止
-      if (
-        this.citys.length === this.data.cityList.length ||
-        this.value.length
-      ) {
+    onSelectAlphabet(e) {
+      let item = this.utils.queryPathSelector(e, "alphabet-item");
+      // 如果不是字母表
+      if (!item) {
         return;
       }
 
-      let len = this.citys.length;
-      let data = this.data.cityList.filter((item, index) => index <= len);
-      this.citys = Object.freeze(data);
-      requestAnimationFrame(this.onRenderData);
+      let panel = document.querySelector(".result-panel");
+      let anchor = document.getElementById(item.innerText);
+      panel.scrollTop = anchor.offsetTop;
     },
-    onSearchCitys() {},
-    _onSearchCitys(value) {
+    onSearchCitys: debounce(function(value) {
       this.value = value;
-      if (!value) {
-        this.onRenderData();
-        return;
-      }
-
-      requestAnimationFrame(() => {
-        this.citys = Object.freeze([this.data.cityList[0]]);
-      });
-    }
+    })
   }
 };
 </script>
@@ -185,5 +163,24 @@ export default {
   line-height: 44px;
   margin-left: 15px;
   border-bottom: 1px solid #f2f2f2;
+}
+
+.alphabet {
+  position: fixed;
+  top: 120px;
+  right: 0;
+  color: #666;
+  font-size: 12px;
+  &-item {
+    display: block;
+    padding: 2px 5px;
+    text-align: center;
+  }
+}
+
+.city-anchor {
+  background-color: #f2f2f2;
+  padding-left: 15px;
+  line-height: 36px;
 }
 </style>

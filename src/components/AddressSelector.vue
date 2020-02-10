@@ -24,7 +24,7 @@
         />
       </div>
     </div>
-    <div class="touch flex-item">
+    <div class="flex-item">
       <van-cell-group title="当前地址">
         <van-cell>
           <div class="flex">
@@ -48,6 +48,7 @@
 <script>
 import search from "@/components/pages/search";
 import userAddress from "@/components/pages/address";
+import debounce from '../helper/debounce'
 import { mapState } from "vuex";
 
 export default {
@@ -77,17 +78,13 @@ export default {
     };
   },
   computed: mapState(["city", "address"]),
-  mounted() {},
+  mounted() {
+  },
   methods: {
-    onSelect(e) {
-      let cell = this.utils.queryPathSelector(e, "van-cell");
-      // 如果不是选择城市
-      if (!cell) {
-        return;
-      }
-      this.$emit("select", cell.innerText);
-    },
-    onSearch() {}
+    onSelect() {},
+    onSearch: debounce(function () {
+      
+    })
   }
 };
 </script>

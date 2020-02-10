@@ -2,14 +2,17 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+
+import 'scss/reset.css'
+import 'scss/main.scss'
+
 import 'amfe-flexible'
 
-import './publics/vant'
-import './publics/utils'
-import './publics/lodash'
-import './assets/scss/main.scss'
+import './plugins/vant'
+import './plugins/fastclick'
 
 Vue.config.productionTip = false
+Vue.config.performace = true
 
 new Vue({
   router,

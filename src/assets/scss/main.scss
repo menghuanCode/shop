@@ -15,8 +15,11 @@ p {
   margin: 0;
 }
 
+html {
+  background-color: #fff;
+}
+
 body {
-  background-color: #f2f2f2;
   user-select: none;
 }
 
@@ -26,7 +29,6 @@ body {
 }
 
 
-@import "_vant.scss";
 @import "_helper.scss";
 
 .navbar {
@@ -126,7 +128,6 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999;
   background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -213,4 +214,27 @@ a {
   background-position: center;
   background-repeat: no-repeat;
   display: inline-block;
+}
+
+.shoplist-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  font-size: 14px;
+  color: #000;
+  &:after, 
+  &:before {
+    display: block;
+    content: "";
+    width: 20px;
+    height: 1px;
+    background-color: #999;
+  }
+  &:before {
+    margin-right: 13px;
+  }
+  &:after {
+    margin-left: 13px;
+  }
 }
